@@ -395,3 +395,16 @@ jobs:
             echo "📜 最近日志（最后 30 行）:"
             tail -30 logs/stock_analysis_*.log 2>/dev/null || echo "无日志"
           fi
+
+      - name: Send Mail
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.qq.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: 今日股票分析报告 (${{ env.REPORT_DATE || 'Daily' }})
+          to: ${{ secrets.RECEIVER_MAIL }}
+          from: GitHub Actions Stock Bot
+          body: 请查看附件中的每日股票分析报告。
+          attachments: reports/*.md
